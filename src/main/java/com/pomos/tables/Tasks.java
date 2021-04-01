@@ -40,10 +40,9 @@ public class Tasks {
     @Column(name = "priority", nullable = true)
     private  String priority;
 
-    public Tasks(@NotNull String summary, @NotNull LocalDateTime dateCreated, LocalDateTime dateCompleted, String priority) {
+    public Tasks(@NotNull String summary, @NotNull LocalDateTime dateCreated, String priority) {
         this.summary = summary;
         this.dateCreated = dateCreated;
-        this.dateCompleted = dateCompleted;
         this.priority = priority;
     }
 }
