@@ -8,10 +8,11 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskUpdateSummaryCommand {
     @NotNull
     private Long id;
