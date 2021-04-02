@@ -2,6 +2,7 @@ package com.pomos.controllers;
 
 import com.pomos.interfaces.TaskRepository;
 import com.pomos.modules.TaskSaveCommand;
+import com.pomos.modules.TaskUpdateCommand;
 import com.pomos.modules.TaskUpdatePriorityCommand;
 import com.pomos.modules.TaskUpdateSummaryCommand;
 import com.pomos.tables.Task;
@@ -45,25 +46,29 @@ public class TaskController {
                 .headers(headers -> headers.location(location(savedTask.getId())));
     }
 
-    // TODO: Merge both updates into one based on the ID
-    @Put("/update/summary")
-    public HttpResponse updateSummary(@Body @Valid TaskUpdateSummaryCommand updateSummaryCommand) {
-        int tasksUpdatedCount = taskRepository
-                .updateSummary(updateSummaryCommand.getId(), updateSummaryCommand.getSummary());
-        return HttpResponse
-                .accepted()
-                .body("{'Updated tasks' :" + tasksUpdatedCount + "}")
-                .header(HttpHeaders.LOCATION, location(updateSummaryCommand.getId()).getPath());
-    }
+    @Put("/update")
+    public HttpResponse<String> updateTask(@Body @Valid TaskUpdateCommand taskUpdateCommand) {
+        try {
+            if (!taskUpdateCommand.getSummary().isBlank() && !taskUpdateCommand.getSummary().isEmpty()) {
+                taskRepository.updateSummary(taskUpdateCommand.getId(), taskUpdateCommand.getSummary());
+            }
+        } catch (NullPointerException ignored) {
+            // Supported behaviour, Do nothing
+        }
 
-    @Put("/update/priority")
-    public HttpResponse updatePriority(@Body @Valid TaskUpdatePriorityCommand taskUpdatePriorityCommand) {
-        int tasksUpdatedCount = taskRepository
-                .updateSummary(taskUpdatePriorityCommand.getId(), taskUpdatePriorityCommand.getPriority());
+        try {
+            String taskPriority = taskUpdateCommand.getPriority().toString();
+            if (!taskPriority.isBlank() && !taskPriority.isEmpty()) {
+                taskRepository.updatePriority(taskUpdateCommand.getId(), taskUpdateCommand.getPriority().name());
+            }
+        } catch (NullPointerException ignored) {
+            // Supported behaviour, Do nothing
+        }
+
         return HttpResponse
                 .accepted()
-                .body("{'Updated tasks' :" + tasksUpdatedCount + "}")
-                .header(HttpHeaders.LOCATION, location(taskUpdatePriorityCommand.getId()).getPath());
+                .body("Task updated")
+                .header(HttpHeaders.LOCATION, location(taskUpdateCommand.getId()).getPath());
     }
 
     @Get("/list")
