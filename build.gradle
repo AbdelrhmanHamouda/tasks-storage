@@ -22,17 +22,23 @@ micronaut {
 dependencies {
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut.sql:micronaut-hibernate-jpa")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     implementation("io.swagger.core.v3:swagger-annotations")
     implementation("javax.annotation:javax.annotation-api")
+    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+
     compileOnly("org.projectlombok:lombok")
+
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:testcontainers")
-    implementation("io.micronaut:micronaut-validation")
+
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.postgresql:postgresql")
 }
@@ -45,6 +51,3 @@ java {
     sourceCompatibility = JavaVersion.toVersion("11")
     targetCompatibility = JavaVersion.toVersion("11")
 }
-
-
-

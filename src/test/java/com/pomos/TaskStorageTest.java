@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import javax.inject.Inject;
 
 @MicronautTest
-class TasksStorageTest {
+class TaskStorageTest {
 
     @Inject
     EmbeddedApplication<?> application;
