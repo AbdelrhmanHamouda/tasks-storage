@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import static com.pomos.modules.PriorityLevels.LOW;
@@ -141,7 +140,8 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     @ReadOnly
     public List<Task> listAllTasks() {
-        String qlQuery = "SELECT * FROM Task";
+        // ! Even though "Task" is not the actual name of the table in the db, it is the name of the task, mapping is done automatically
+        String qlQuery = "SELECT tasks_list FROM Task as tasks_list";
         TypedQuery<Task> query = entityManager.createQuery(qlQuery, Task.class);
 
         return query.getResultList();
