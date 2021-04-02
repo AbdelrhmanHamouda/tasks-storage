@@ -5,6 +5,7 @@ import com.pomos.modules.TaskSaveCommand;
 import com.pomos.modules.TaskUpdatePriorityCommand;
 import com.pomos.modules.TaskUpdateSummaryCommand;
 import com.pomos.tables.Task;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -15,6 +16,9 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 
 import javax.validation.Valid;
+import java.util.List;
+
+import static com.pomos.utils.UriUtils.location;
 
 @ExecuteOn(TaskExecutors.IO)
 @Controller("/tasks")
@@ -37,7 +41,8 @@ public class TaskController {
     public HttpResponse<Task> save(@Body @Valid TaskSaveCommand command) {
         Task savedTask = taskRepository.save(command.getSummary(), command.getPriority().name());
         return HttpResponse
-                .created(savedTask);
+                .created(savedTask)
+                .headers(headers -> headers.location(location(savedTask.getId())));
     }
 
     // TODO: Merge both updates into one based on the ID
@@ -47,7 +52,8 @@ public class TaskController {
                 .updateSummary(updateSummaryCommand.getId(), updateSummaryCommand.getSummary());
         return HttpResponse
                 .accepted()
-                .body("{'Updated tasks' :" + tasksUpdatedCount + "}");
+                .body("{'Updated tasks' :" + tasksUpdatedCount + "}")
+                .header(HttpHeaders.LOCATION, location(updateSummaryCommand.getId()).getPath());
     }
 
     @Put("/update/priority")
@@ -56,8 +62,12 @@ public class TaskController {
                 .updateSummary(taskUpdatePriorityCommand.getId(), taskUpdatePriorityCommand.getPriority());
         return HttpResponse
                 .accepted()
-                .body("{'Updated tasks' :" + tasksUpdatedCount + "}");
+                .body("{'Updated tasks' :" + tasksUpdatedCount + "}")
+                .header(HttpHeaders.LOCATION, location(taskUpdatePriorityCommand.getId()).getPath());
     }
 
-    // TODO: create list all method
+    @Get("/list")
+    public List<Task> listAllTasks() {
+        return taskRepository.listAllTasks();
+    }
 }
