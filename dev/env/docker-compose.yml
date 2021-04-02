@@ -4,8 +4,8 @@ services:
     image: "postgres" # use latest official postgres version
     environment:
       # configure postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: registration
+      POSTGRES_PASSWORD: secretPassword
+      POSTGRES_DB: tasks_store
     ports:
       - 5432:5432
     volumes:
