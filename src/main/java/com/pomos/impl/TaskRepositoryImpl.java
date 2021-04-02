@@ -1,6 +1,7 @@
 package com.pomos.impl;
 
 import com.pomos.interfaces.TaskRepository;
+import com.pomos.modules.PriorityLevels;
 import com.pomos.tables.Task;
 import io.micronaut.transaction.annotation.ReadOnly;
 
@@ -11,12 +12,15 @@ import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+
+import static com.pomos.modules.PriorityLevels.LOW;
 
 @Singleton
 public class TaskRepositoryImpl implements TaskRepository {
 
-    public static final String DEFAULT_PRIORITY = "low";
+    public static final PriorityLevels DEFAULT_PRIORITY = LOW;
     private final EntityManager entityManager;
 
     public TaskRepositoryImpl(EntityManager entityManager) {
@@ -64,7 +68,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     public Task save(@NotNull String summary) {
         LocalDateTime dateCreated = LocalDateTime.now();
 
-        Task task = new Task(summary, dateCreated, DEFAULT_PRIORITY);
+        Task task = new Task(summary, dateCreated, DEFAULT_PRIORITY.name());
 
         entityManager.persist(task);
         return task;
