@@ -18,10 +18,10 @@ public class TaskSaveCommand {
     @NotBlank
     private String summary;
 
-    private String priority;
+    private PriorityLevels priority;
 
     public TaskSaveCommand(String summary) {
         this.summary = summary;
-        this.priority = PriorityLevels.LOW.name();
+        this.priority = PriorityLevels.LOW;
     }
 }
