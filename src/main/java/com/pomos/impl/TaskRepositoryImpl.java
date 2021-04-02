@@ -1,6 +1,7 @@
 package com.pomos.impl;
 
 import com.pomos.interfaces.TaskRepository;
+import com.pomos.modules.PriorityLevels;
 import com.pomos.tables.Task;
 import io.micronaut.transaction.annotation.ReadOnly;
 
@@ -13,10 +14,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.pomos.modules.PriorityLevels.LOW;
+
 @Singleton
 public class TaskRepositoryImpl implements TaskRepository {
 
-    public static final String DEFAULT_PRIORITY = "low";
+    public static final PriorityLevels DEFAULT_PRIORITY = LOW;
     private final EntityManager entityManager;
 
     public TaskRepositoryImpl(EntityManager entityManager) {
@@ -64,7 +67,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     public Task save(@NotNull String summary) {
         LocalDateTime dateCreated = LocalDateTime.now();
 
-        Task task = new Task(summary, dateCreated, DEFAULT_PRIORITY);
+        Task task = new Task(summary, dateCreated, DEFAULT_PRIORITY.name());
 
         entityManager.persist(task);
         return task;
@@ -137,7 +140,8 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     @ReadOnly
     public List<Task> listAllTasks() {
-        String qlQuery = "SELECT * FROM Task";
+        // ! Even though "Task" is not the actual name of the table in the db, it is the name of the task, mapping is done automatically
+        String qlQuery = "SELECT tasks_list FROM Task as tasks_list";
         TypedQuery<Task> query = entityManager.createQuery(qlQuery, Task.class);
 
         return query.getResultList();

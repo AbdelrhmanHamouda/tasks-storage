@@ -1,13 +1,15 @@
 micronaut:
   application:
     name: tasksStorage
+# TODO: finalize user and password values
 datasources:
   default:
-    url: ${JDBC_URL:`jdbc:postgresql://localhost:5432/postgres`}
+    url: ${JDBC_URL:`jdbc:postgresql://localhost:5432/tasks_store`}
     driverClassName: ${JDBC_DRIVER:org.postgresql.Driver}
     username: ${DBC_USER:postgres}
-    password: ${JDBC_PASSWORD:""}
+    password: ${JDBC_PASSWORD:secretPassword}
 
+# TODO: auto create database
 jpa.default.properties:
   hibernate:
     hbm2ddl:

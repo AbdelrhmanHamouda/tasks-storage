@@ -1,0 +1,14 @@
+version: '3'
+services:
+  database:
+    image: "postgres" # use latest official postgres version
+    environment:
+      # configure postgres
+      POSTGRES_PASSWORD: secretPassword
+      POSTGRES_DB: tasks_store
+    ports:
+      - 5432:5432
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # volumes persist data even if container shuts down
+volumes:
+  database-data: # named volumes can be managed easier using docker-compose
